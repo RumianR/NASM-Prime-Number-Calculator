@@ -1,0 +1,61 @@
+;MOHAMMMAD NAIMUR RASHID 40027867 :)
+
+section .data
+number db 5; the divident
+answer db 1; 1 means number is prime, 0 means number is not prime
+
+section .bss
+;no need 
+
+section .text
+;no need
+
+global _start
+
+_start:
+	mov esi, number ; get the offset of number into esi
+
+keith: 	
+	
+	mov eax, 0 ; clear the entire eax register
+	mov al, [esi] ; get the number from memory into al
+	mov dl, al ; put it inside dl as well to keep track of og number, in incase the eax is changed
+	mov bl, 2; bl holds each divisor starting from 2
+	mov cl, [answer]; holds the value of answer from memory, meaning if 1,it's prime and 0 if not 
+	jmp checkcondition ; now it will jmp to check the condition for entering loop
+
+checkcondition:
+	
+	
+	cmp bl,al ; comparing if divisor is less than number
+	jl loopy; jumps back to loopy which loops the divison process and checks if remainder 0
+	jmp byebye; if the condition of the loop fails, the divisor is equal to the number
+
+loopy: 	
+	
+	
+	div bl	; ax / bl with quot in al and rem in ah
+	and ax, 1111111100000000b; isolate the rem in ah with a AND mask ; to determine
+	cmp ah,0 ; compares the remainder to to 0
+	je changeprimeval ; if the remainder is 0, it jumps to the changeprimeval label
+	inc bl; if not, it increments the divisor 
+	mov eax,0 ; resetting al because we will move back the original number back in again
+	mov al,[esi]; filling that back up with the og value of 5 or wtv we want really
+	jmp checkcondition; and finally jumps to check condition to enter loop again	
+
+changeprimeval:
+
+	mov cl,0 ; if we're here, the remainder was 0 and number is not prime
+	mov [answer],cl; setting value to 0 from register cl to the answer address
+
+	mov eax,0 ; resetting al 
+	mov al,[esi]; filling that  back up with the og value of 5 or wtv
+	inc bl; incrementing bl
+	
+	jmp loopy; jumps back to loop
+	
+
+
+byebye: mov eax,1 
+	int 0x80 
+	

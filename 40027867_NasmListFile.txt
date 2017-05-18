@@ -1,0 +1,61 @@
+     1                                  ;MOHAMMMAD NAIMUR RASHID 40027867 :)
+     2                                  
+     3                                  section .data
+     4 00000000 05                      number db 5; the divisor
+     5 00000001 01                      answer db 1; 1 means number is prime, 0 means number is not prime
+     6                                  
+     7                                  section .bss
+     8                                  ;no need 
+     9                                  
+    10                                  section .text
+    11                                  ;no need
+    12                                  
+    13                                  global _start
+    14                                  
+    15                                  _start:
+    16 00000000 BE[00000000]            	mov esi, number ; get the offset of number into esi
+    17                                  
+    18                                  keith: 	
+    19                                  	
+    20 00000005 B800000000              	mov eax, 0 ; clear the entire eax register
+    21 0000000A 8A06                    	mov al, [esi] ; get the number from memory into al
+    22 0000000C 88C2                    	mov dl, al ; put it inside dl as well to keep track of og number, in incase the eax is changed
+    23 0000000E B302                    	mov bl, 2; bl holds each divisor starting from 2
+    24 00000010 8A0D[01000000]          	mov cl, [answer]; holds the value of answer from memory, meaning if 1,it's prime and 0 if not 
+    25 00000016 EB00                    	jmp checkcondition ; now it will jmp to check the condition for entering loop
+    26                                  
+    27                                  checkcondition:
+    28                                  	
+    29                                  	
+    30 00000018 38C3                    	cmp bl,al ; comparing if divisor is less than number
+    31 0000001A 7C02                    	jl loopy; jumps back to loopy which loops the divison process and checks if remainder 0
+    32 0000001C EB29                    	jmp byebye; if the condition of the loop fails, the divisor is equal to the number
+    33                                  
+    34                                  loopy: 	
+    35                                  	
+    36                                  	
+    37 0000001E F6F3                    	div bl	; ax / bl with quot in al and rem in ah
+    38 00000020 662500FF                	and ax, 1111111100000000b; isolate the rem in ah with a AND mask ; to determine
+    39 00000024 80FC00                  	cmp ah,0 ; compares the remainder to to 0
+    40 00000027 740B                    	je changeprimeval ; if the remainder is 0, it jumps to the changeprimeval label
+    41 00000029 FEC3                    	inc bl; if not, it increments the divisor 
+    42 0000002B B800000000              	mov eax,0 ; resetting al because we will move back the original number back in again
+    43 00000030 8A06                    	mov al,[esi]; filling that back up with the og value of 5 or wtv we want really
+    44 00000032 EBE4                    	jmp checkcondition; and finally jumps to check condition to enter loop again	
+    45                                  
+    46                                  changeprimeval:
+    47                                  
+    48 00000034 B100                    	mov cl,0 ; if we're here, the remainder was 0 and number is not prime
+    49 00000036 880D[01000000]          	mov [answer],cl; setting value to 0 from register cl to the answer address
+    50                                  
+    51 0000003C B800000000              	mov eax,0 ; resetting al 
+    52 00000041 8A06                    	mov al,[esi]; filling that  back up with the og value of 5 or wtv
+    53 00000043 FEC3                    	inc bl; incrementing bl
+    54                                  	
+    55 00000045 EBD7                    	jmp loopy; jumps back to loop
+    56                                  	
+    57                                  
+    58                                  
+    59 00000047 B801000000              byebye: mov eax,1 
+    60 0000004C CD80                    	int 0x80 
+    61                                  	
